@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include <iostream>
+#include "Modulos/menus.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
 using namespace std;
 
-// g++ cliente.cpp -o Cliente.exe -lws2_32
+// g++ cliente.cpp Modulos/menus.cpp -o Cliente.exe -lws2_32
 
 int main(int argc, char *argv[]) {
 	WSADATA wsaData;
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
     cout << "Connection stablished with: " << inet_ntoa(server.sin_addr) << "(" << ntohs(server.sin_port) << ")" << endl;
 
 	// SEND and RECEIVE data
-    
+    lanzaAplicacion(s, sendBuff, recvBuff);
 
 	// CLOSING the socket and cleaning Winsock...
 	closesocket(s);

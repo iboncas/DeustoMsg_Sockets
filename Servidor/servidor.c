@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <winsock2.h>
+#include "Modulos/bd.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
+#define MAX_USER 32
+#define MAX_PASS 128
 
-// gcc servidor.c -o Servidor.exe -lws2_32
+// gcc servidor.c Modulos/bd.c Modulos/sqlite3.c -o Servidor.exe -lws2_32
 
 int main(int argc, char *argv[]) {
 
@@ -75,10 +78,39 @@ int main(int argc, char *argv[]) {
 	//SEND and RECEIVE data
 	printf("Waiting for incoming messages from client... \n");
 	do {
-		int bytes = recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+		int bytes = recv(comm_socket, recvBuff, 512, 0);
 		if (bytes > 0) {
-				
-        }
+			char cod[3];
+			strncpy(cod, recvBuff, 2);
+			cod[2] = '\0';
+			if(strcmp(cod, "00") == 0){
+				char *token;
+				token = strtok(recvBuff, "}");
+				token = strtok(NULL, "}");
+				char user[MAX_USER];
+				strcpy(user, token);
+				memset(sendBuff, 0, 512);
+				if(existeUsuario(user)){
+					strcpy(sendBuff, "Existe");
+					send(comm_socket, sendBuff, 512, 0);
+				}else{
+					strcpy(sendBuff, "No existe");
+					send(comm_socket, sendBuff, 512, 0);
+				}
+			}else if(strcmp(cod, "01") == 0){
+				char *token;
+				token = strtok(recvBuff, "}");
+				token = strtok(NULL, "}");
+				char user[MAX_USER];
+				strcpy(user, token);
+				token = strtok(recvBuff, "}");
+				token = strtok(NULL, "}");
+				char pass[MAX_PASS];
+				strcpy(pass, token);
+
+				// Comprobar si el usuario existe en la BD
+			}
+		}
 	} while (1);
 
 	// CLOSING the sockets and cleaning Winsock...
