@@ -91,9 +91,11 @@ int main(int argc, char *argv[]) {
 				strcpy(user, token);
 				memset(sendBuff, 0, 512);
 				if(existeUsuario(user)){
+					memset(sendBuff, 0, 512);
 					strcpy(sendBuff, "Existe");
 					send(comm_socket, sendBuff, 512, 0);
 				}else{
+					memset(sendBuff, 0, 512);
 					strcpy(sendBuff, "No existe");
 					send(comm_socket, sendBuff, 512, 0);
 				}
@@ -103,12 +105,18 @@ int main(int argc, char *argv[]) {
 				token = strtok(NULL, "}");
 				char user[MAX_USER];
 				strcpy(user, token);
-				token = strtok(recvBuff, "}");
 				token = strtok(NULL, "}");
 				char pass[MAX_PASS];
 				strcpy(pass, token);
 
 				// Comprobar si el usuario existe en la BD
+				if(comprobarUsuario(user, encrypt(pass))){
+					strcpy(sendBuff, "Coincide");
+					send(comm_socket, sendBuff, 512, 0);
+				}else{
+					strcpy(sendBuff, "No coincide");
+					send(comm_socket, sendBuff, 512, 0);
+				}
 			}
 		}
 	} while (1);

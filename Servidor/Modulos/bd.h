@@ -5,4 +5,8 @@
 
 bool existeUsuario(char *nombre);
 
+char *encrypt(char *pass);
+
+bool comprobarUsuario(char *nombre, char *pass);
+
 #endif /*BD_H_*/

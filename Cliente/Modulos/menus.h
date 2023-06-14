@@ -9,4 +9,6 @@ char printInicio();
 
 bool printLogin(SOCKET s, char *sendBuff, char *recvBuff);
 
+char printMenu();
+
 #endif /*MENUS_H_*/
